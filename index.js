@@ -2,8 +2,6 @@ import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import {OrbitControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js'
 import {OBJLoader} from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/OBJLoader.js';
 import {Lut} from 'https://unpkg.com/three@0.127.0/examples/jsm/math/Lut.js';
-import { geoInterpolate } from 'https://d3js.org/d3-geo.v2.min.js';
-const canvas = document.querySelector('canvas.webgl')
 
 // Globe Geometry
 const GLOBE_RADIUS = 1;
@@ -92,7 +90,6 @@ function loadobj(path, material){
     // Look-up table (colormap) https://threejs.org/docs/#examples/en/math/Lut
     var lut = new Lut('blackbody',256);
 
-    var centre = new THREE.Vector3(0,0,0);
     var request = new XMLHttpRequest();
     request.open('GET', 'data/g_slim.json', false);
     request.send(null)
@@ -109,7 +106,7 @@ function loadobj(path, material){
         // altitude
         const altitude = clamp(start.distanceTo(end) * .75, CURVE_MIN_ALTITUDE, CURVE_MAX_ALTITUDE);
         
-        const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat]);
+        const interpolate = d3.geoInterpolate([startLng, startLat], [endLng, endLat]);
         const midCoord1 = interpolate(0.25);
         const midCoord2 = interpolate(0.75);
         const mid1 = coordinateToPosition(midCoord1[1], midCoord1[0], GLOBE_RADIUS + altitude);
